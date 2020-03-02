@@ -1,0 +1,56 @@
+想法： 枚举每一个可能的变化向量，然后把这些向量作用到A上，算出与B的重合
+
+
+版本一: 超时。 计算可能的变化 N^4
+把可能的变化作用的N^2的点上，总共复杂度N^6
+
+
+class Solution:
+    def largestOverlap(self, A: List[List[int]], B: List[List[int]]) -> int:
+        possible_transforms = set()
+        for x1 in range(len(A)):
+            for y1 in range(len(A[0])):
+                for x2 in range(len(B)):
+                    for y2 in range(len(B[0])):
+                        if A[x1][y1] + B[x2][y2] != 2:
+                            continue
+                        possible_transforms.add((x2 - x1, y2 - y1))
+        
+        def isOut(x, y):
+            return x < 0 or x >= len(A) or y < 0 or y >= len(A)
+        
+        result = 0
+        for dx, dy in possible_transforms:
+            ans = 0
+            for i in range(len(A)):
+                for j in range(len(A[0])):
+                    ax, ay = i + dx, j + dy
+                    if not isOut(ax, ay) and A[i][j] == B[ax][ay] and A[i][j] == 1:
+                        ans += 1
+            result = max(result, ans)
+        return result
+                        
+                        
+
+版本二： 在A 中间，每次发现一个为1的点，就去遍历B， 看看需要用哪个变化向量才能得到，以变化向量为key进行计数
+
+复杂度 N^2 * N ^2,为N^4, 空间复杂度为 N^2， 在N*N矩阵中一共有 n^2可能的向量
+
+from collections import Counter
+class Solution:
+    def largestOverlap(self, A: List[List[int]], B: List[List[int]]) -> int:
+        vec_counter = Counter()
+        for x1, row in enumerate(A):
+            for y1, e in enumerate(row):
+                if e:
+                    for x2, row2 in enumerate(B):
+                        for y2, e2 in enumerate(row2):
+                            if e2:
+                                vec_counter[(x2 - x1, y2 - y1)] += 1
+        
+        result = 0
+        if vec_counter:
+            _, result = vec_counter.most_common(1)[0]
+        return result
+                        
+                        

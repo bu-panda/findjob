@@ -7,6 +7,7 @@ Please create your own repo under the root.
 Organize your repo as 
 
 your_name
-  - problem_id
-  	- souce_code
-	- note
+  - problem_id-problem_description.txt
+
+
+Please include your non-trivial submissions in the note. Describe how you get there and why it succeess/fail.
