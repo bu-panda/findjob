@@ -1,0 +1,51 @@
+# Use accumulative sum matrix
+# For each element located at (x, y) equals to 1, try with size = 1, 2, 3, min(row, col)
+# Element (x, y) with size = n, the right bottom is (x + n - 1, y + n - 1)
+# I personally like to put one dummy row and col when I use accumulative sum matrix
+# If we are allowed to change the input format, the space complexity is O(1) because we can optimize it to in-place algo
+# The time complexity is o(mn), notice that size is not reset on the loop, the time complexity is O(mn) instead of o(mn min(m,n))
+
+class Solution:
+    def maximalSquare(self, matrix: List[List[str]]) -> int:
+        if not matrix:
+            return 0
+        row, col = len(matrix), len(matrix[0])
+        # Add dummy row and col for accumulative sum matrix
+        accu_matrix = [[0 for x in range(col + 1)] for y in range(row + 1)]
+        
+        # Calculate matrix
+        for i in range(0, row):
+            for j in range(0, col):
+                val = 1 if matrix[i][j] == '1' else 0 
+                accu_matrix[i + 1][j + 1] += (val + accu_matrix[i + 1][j])
+        
+        for i in range(1, row):
+            for j in range(0, col):
+                accu_matrix[i + 1][j + 1] += accu_matrix[i][j + 1]
+        
+        
+        size = 0
+        for i in range(0, row):
+            for j in range(0, col):
+                if matrix[i][j] == '1':
+                    # Try next size. If we find it, permanently increase the size
+                    while self.expand(i + 1, j + 1, accu_matrix, size + 1):
+                        size += 1
+        return size*size
+    
+    def expand(self, i, j, accu_matrix, size):
+        x, y = i + size - 1, j + size - 1
+        if x >= len(accu_matrix) or y >= len(accu_matrix[0]):
+            return False
+        
+        # If the sum of the area equals to size^2, it implies that it is a qualified square
+        total = accu_matrix[x][y] - accu_matrix[x][j-1] - accu_matrix[i-1][y] + accu_matrix[i-1][j-1]
+        return size * size == total
+        
+        
+        
+        
+        
+        
+        
+        
