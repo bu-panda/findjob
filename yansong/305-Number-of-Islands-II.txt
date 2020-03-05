@@ -1,0 +1,82 @@
+class Solution {
+    
+    /* use union find to solve it
+    1 build union find class
+    2 for each position:
+        if already vistied, pass,
+        else:
+            count++
+            for all the neighbours:
+                if could join:
+                    count--
+    */
+
+    public List<Integer> numIslands2(int m, int n, int[][] positions) {
+        int count = 0; 
+        List<Integer> result = new ArrayList<>();
+        int[][] dirs = {{0, 1}, {1, 0}, {-1, 0}, {0, -1}};
+        Set<Integer> set = new HashSet<>();
+        UnionFind uf = new UnionFind(m*n);
+        for (int[] p : positions) {
+            int root = n * p[0] + p[1];
+            if (!set.add(root)) {
+                result.add(count);
+                continue;
+            }
+            uf.parent[root] = root;
+            count++;
+            for(int[] dir : dirs) {
+                int x = p[0] + dir[0]; 
+                int y = p[1] + dir[1];
+                int nb = n * x + y;
+                if(x < 0 || x >= m || y < 0 || y >= n || uf.parent[nb] == -1) continue;
+                //System.out.println(root);
+                //System.out.println(nb);
+                if (uf.union(root, nb)) {
+                    count--;
+                }
+            }
+            result.add(count);
+        }
+        
+        return result;
+    }
+}
+
+// union find
+    class UnionFind {
+        int[] parent;
+        int[] sizeA;
+        
+        public UnionFind (int size) {
+            sizeA = new int[size];
+            parent = new int[size];
+            for (int i = 0; i < size; i++) {
+                parent[i] = -1;
+                sizeA[i] = 1;
+            }
+        }
+        
+        public boolean union(int x, int y) {
+            int xr = find(x);
+            int yr = find(y);
+            if (xr == yr) {
+                return false;
+            }
+            else if (sizeA[xr] < sizeA[yr]) {
+                parent[xr] = yr;
+                sizeA[yr] = sizeA[yr] + sizeA[xr];
+            } else {
+                parent[yr] = xr;
+                sizeA[xr] = sizeA[xr] + sizeA[yr];
+            }
+            return true;
+        }
+        
+        public int find(int x) {
+            if (parent[x] != x) {
+                return find(parent[x]);
+            }
+            return parent[x];
+        }
+    }
