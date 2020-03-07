@@ -1,0 +1,54 @@
+
+class LRUCache {
+public:
+    unordered_map<int, Node*> val2Node; 
+    int count = 0;
+    int cap;
+    Node* head = new Node(-1, -1);
+    Node* tail = new Node(-1, -1);
+    LRUCache(int capacity) {
+        cap = capacity;
+        head->right = tail;
+        tail->left = head;
+        return;
+    }
+    
+    int get(int key) {
+        if (!val2Node.count(key)) { 
+            return -1;
+        }
+        Node* cur = val2Node[key];
+        cur->left->right = cur->right;
+        cur->right->left = cur->left;
+        cur->right = head->right;
+        head->right->left = cur;
+        head->right = cur;
+        cur->left = head;
+        
+        return cur->val;
+    }
+    
+    void put(int key, int value) {
+        if (val2Node.count(key)) { 
+            get(key);
+            val2Node[key]->val = value;
+            return;
+        }
+        else { 
+            Node *n = new Node(key, value);
+            val2Node[key] = n;
+            head->right->left = n;
+            n->right = head->right;
+            n->left = head;
+            head->right = n;
+            
+            count++;
+            if (count > cap) { 
+                val2Node.erase(tail->left->key);
+                tail = tail->left;
+                count--;
+            }
+        }
+        
+    }
+};
