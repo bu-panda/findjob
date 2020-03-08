@@ -1,0 +1,41 @@
+Order by length, then check between length + 1 and length, if they are are substring, update the length
+
+from collections import defaultdict
+class Solution:
+    def longestStrChain(self, words: List[str]) -> int:
+        word_dict = defaultdict(list)
+        
+        for word in words:
+            word_dict[len(word)].append((word, 1))
+        
+        def isSub(s1, s2):
+            can_skip = True
+            i, j = 0, 0
+            while i < len(s1):
+                if s1[i] == s2[j]:
+                    i += 1
+                    j += 1
+                elif can_skip:
+                    j += 1
+                    can_skip = False
+                else:
+                    return False
+            return True
+        
+        
+        ans = 1
+        for l in sorted(word_dict.keys()):
+            current_words = word_dict[l]
+            next_words = word_dict[l + 1]
+            if not next_words:
+                continue
+            for i, (n, f) in enumerate(next_words):
+                for c, pf in current_words:
+                    if isSub(c, n) and pf + 1 > f:
+                        word_dict[l+1][i] = (n, pf + 1)
+                        ans = max(ans, pf + 1)
+        return ans
+            
+            
+        
+        

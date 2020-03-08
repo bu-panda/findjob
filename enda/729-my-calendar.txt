@@ -1,0 +1,26 @@
+Keep start, end in order, do a cross search and the idx should be the same
+
+import bisect
+
+class MyCalendar:
+
+    def __init__(self):
+        self.starts = []
+        self.ends = []
+
+    def book(self, start: int, end: int) -> bool:
+        if end <= start:
+            return False
+        close_idx = bisect.bisect_right(self.ends, start)
+        start_idx = bisect.bisect_left(self.starts, end)
+        if close_idx == start_idx:
+            self.starts.insert(close_idx, start)
+            self.ends.insert(close_idx, end)
+            return True
+        else:
+            return False
+
+
+# Your MyCalendar object will be instantiated and called as such:
+# obj = MyCalendar()
+# param_1 = obj.book(start,end)
