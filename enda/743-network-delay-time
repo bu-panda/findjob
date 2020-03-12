@@ -1,0 +1,64 @@
+这题一开始方向想错了。BFS并不能求出结果。应该用 Dijkstra's algo 来算节点间最短距离
+
+这个算法注意一开始的初始化，用N+1能够简化很多计算的过程。
+
+- 最开始 dist字典设置为inf for every node， dist[M] 表示 M 到 K的最小距离
+- 所有的都没有见到
+- 自己到自己的距离为0
+- 之后找到一条道K最短的边，拿出这个节点
+- 检查这个节点的邻居，尝试比较当前到 K 的距离 dist[K] 和 使用现在节点 M 到K 的距离 dist[K -> M] + dist[M -> 邻居]
+- 该节点加入遍历节点
+- 循环直到没有新的节点
+
+from collections import defaultdict
+class Solution:
+    def networkDelayTime(self, times: List[List[int]], N: int, K: int) -> int:
+        if not times:
+            return -1
+        
+        G = defaultdict(list)
+        for u, v, w in times:
+            G[u].append((v, w))
+        
+        dist = {node: float('inf') for node in range(1, 1 + N)}
+        seen = [False] * (N+1)
+        dist[K] = 0
+        
+        while True:
+            cand_node, cand_dist = -1, float('inf')
+            for i in range(1, 1 + N):
+                if not seen[i] and dist[i] < cand_dist:
+                    cand_node, cand_dist = i, dist[i]
+            
+            if cand_node == -1:
+                break
+            seen[cand_node] = True
+            for n, w in G[cand_node]:
+                dist[n] = min(dist[n], dist[cand_node] + w)
+        ans = max(dist.values())
+        return ans if ans < float('inf') else -1
+		
+		
+
+-------------------------- 用 heap 来优化 发现最小距离
+
+class Solution(object):
+    def networkDelayTime(self, times, N, K):
+        graph = collections.defaultdict(list)
+        for u, v, w in times:
+            graph[u].append((v, w))
+
+        pq = [(0, K)]
+        dist = {}
+        while pq:
+            d, node = heapq.heappop(pq)
+            if node in dist: continue
+            dist[node] = d
+            for nei, d2 in graph[node]:
+                if nei not in dist:
+                    heapq.heappush(pq, (d+d2, nei))
+
+        return max(dist.values()) if len(dist) == N else -1
+                
+                
+        

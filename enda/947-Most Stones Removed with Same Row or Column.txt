@@ -1,0 +1,41 @@
+一开始没有往DFS去想，以为是优先队列
+
+每一对拥有相同x或者y坐标的可以描述成相邻点，在一张图上。
+
+以一个点做深度优先遍历，不是回溯，统计总共走过的节点数 -1就是一簇的操作数
+
+遍历每个节点，加起来就是move总数
+
+class Solution:
+    def removeStones(self, stones: List[List[int]]) -> int:
+        from collections import defaultdict
+        
+        G = defaultdict(list)
+        for i, sx in enumerate(stones):
+            for j in range(i):
+                sy = stones[j]
+                if sx[0] == sy[0] or sx[1] == sy[1]:
+                    G[i].append(j)
+                    G[j].append(i)
+        
+        ans = 0
+        visit = set()
+        for i in range(len(stones)):
+            if i not in visit:
+                chain_length = self.dfs(i, G, visit) - 1
+                ans += chain_length
+        return ans
+    
+    def dfs(self, loc, G, visit):
+        if loc in visit:
+            return 0
+        
+        visit.add(loc)
+        length = 1
+        for n in G[loc]:
+            length += self.dfs(n, G, visit)
+        return length
+        
+        
+        
+        
