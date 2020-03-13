@@ -1,0 +1,68 @@
+# same as the word ladder, but need to print path, so create a map which store all the path end with this word.
+#use distance to duplicate the visited word
+
+public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        Set<String> dict = new HashSet<>(wordList);
+        Queue<String> q = new LinkedList<>();
+        
+        Map<String, List<List<String>>> map = new HashMap<>();
+        Map<String, Integer> dis = new HashMap<>();
+        dis.put(beginWord, 0);
+        map.put(beginWord, new ArrayList<>());
+        List<String> list = new ArrayList<>();
+        list.add(beginWord);
+        map.get(beginWord).add(list);
+        
+        q.add(beginWord);
+        
+        while (!q.isEmpty()) {
+            int size = q.size();
+            Set<String> set = new HashSet<>();
+            for (int i = 0; i < size; i++) {
+                String tmp = q.poll();
+                if (set.contains(tmp)) {
+                    continue;
+                }
+                set.add(tmp);
+                for (String s : find(tmp, dict)) {
+                    if (!dis.containsKey(s) || dis.get(tmp) + 1 == dis.get(s)) {
+                        q.add(s);
+                        dis.put(s, dis.get(tmp) + 1);
+                        if (!map.containsKey(s)) {
+                            map.put(s, new ArrayList<>());
+                        }
+                        for (List<String> pre : map.get(tmp)) {
+                            List<String> tt = new ArrayList<>(pre);
+                            tt.add(s);
+                            map.get(s).add(tt);
+                        }
+                    }
+                }
+            }
+        }
+        //System.out.println(map.get("tex"));
+        if (map.containsKey(endWord)) {
+            return map.get(endWord);
+        }
+        return new ArrayList<>();
+        
+    }
+    
+    
+    public List<String> find(String s, Set<String> dic) {
+        char[] arr = s.toCharArray();
+        List<String> res = new ArrayList<>();
+        for (int i = 0; i < arr.length; i++) {
+            char old = arr[i];
+            for (int j = 0; j < 26; j++) {
+                if (old != (char)('a' + j)) {
+                    arr[i] =  (char)('a' +j);
+                    if(dic.contains(new String(arr))) {
+                        res.add(new String(arr));
+                    } 
+                }
+            }
+            arr[i] = old;
+        }
+        return res;
+    }
