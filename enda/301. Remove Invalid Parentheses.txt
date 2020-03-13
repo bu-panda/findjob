@@ -1,0 +1,45 @@
+这个题有几个点
+- 选出到底需要清除多少个 出现 ） 时候，如果没有（铺垫， 则 rmr + 1, 反之，减少一个 remove_left （rml - 1), 出现 （ 时候， rml + 1
+- 遇到字符的时候，如果是括号，可以选择加入，也可以选择不加入
+- 加入的话，pattern需要追加，加入（， ） match 分别 + 1， - 1
+- 发现合格的标志是 index走到最后一位，rmr, rml归零，且match符合
+- 剪枝搜索的时候， idx越界， rml, rmr越界，都停止
+- 尤其注意，  当match < 0时候立即停止搜索， 因为 match < 0 对应出现了 ）xxxx 的模式，永远无法匹配回来
+
+
+from copy import copy
+class Solution:
+    def removeInvalidParentheses(self, s: str) -> List[str]:
+        rml, rmr = 0, 0
+        for c in s:
+            if c == ")":
+                if rml == 0:
+                    rmr += 1
+                else:
+                    rml -= 1
+            elif c == "(":
+                rml += 1
+        
+        result = set()
+        self.traverse(s, rml, rmr, 0, 0,"", result)
+        return list(result)
+    
+    def traverse(self, s, rml, rmr, idx, match, pattern, result):
+        if idx == len(s) and match == 0 and rml == 0 and rmr == 0:
+            result.add(copy(pattern))
+            return
+        if idx >= len(s) or rml < 0 or rmr < 0 or match < 0:
+            return
+            
+        c = s[idx]
+        if c == "(":
+            self.traverse(s, rml, rmr, idx + 1, match + 1, pattern + c, result)
+            self.traverse(s, rml - 1, rmr, idx + 1, match, pattern, result)
+        elif c == ")":
+            self.traverse(s, rml, rmr, idx + 1, match - 1, pattern + c, result)
+            self.traverse(s, rml, rmr - 1, idx + 1, match, pattern, result)
+        else:
+            self.traverse(s, rml, rmr, idx + 1, match, pattern + c, result)
+            
+            
+        

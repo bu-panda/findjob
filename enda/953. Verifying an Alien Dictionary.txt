@@ -1,0 +1,21 @@
+easy, construct a dict of character to index, compare each word, find diff, check whether diffs are reasonable.
+
+If no diff, check length
+
+class Solution:
+    def isAlienSorted(self, words: List[str], order: str) -> bool:
+        index = {c: i for i, c in enumerate(order)}
+        for i in range(1, len(words)):
+            cur, pre = words[i], words[i - 1]
+            diff = None
+            for j in range(min(len(cur), len(pre))):
+                if cur[j] != pre[j]:
+                    diff = j
+                    break
+            
+            if diff is None and len(cur) < len(pre):
+                    return False
+            elif index[cur[diff]] < index[pre[diff]]:
+                    return False
+        return True
+        

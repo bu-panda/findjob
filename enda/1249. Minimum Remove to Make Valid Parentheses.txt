@@ -1,0 +1,37 @@
+于 301非常接近，但是考虑到我们不是列举出所有的，可以用算出来需要保留多少个，然后从左往右过一遍
+
+注意，左括号可以随意保留，只要还有 keepl， 右括号必须当有keepr并且match 》 0
+
+from collections import Counter
+class Solution:
+    def minRemoveToMakeValid(self, s: str) -> str:
+        rmr, rml = 0, 0
+        
+        for c in s:
+            if c == "(":
+                rml += 1
+            elif c == ")":
+                if rml > 0:
+                    rml -= 1
+                else:
+                    rmr += 1
+        counter = Counter(s)
+        keepl, keepr = counter["("] - rml, counter[")"] - rmr
+        
+        result = ""
+        match = 0
+        for c in s:
+            if c == "(":
+                if keepl > 0:
+                    keepl -= 1
+                    match += 1
+                    result += c
+            elif c == ")":
+                if keepr > 0 and match > 0:
+                    keepr -= 1
+                    match -= 1 
+                    result += c
+            else:
+                result += c
+        return result
+            
