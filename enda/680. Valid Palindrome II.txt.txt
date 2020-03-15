@@ -1,0 +1,26 @@
+Delete at most 1 character, so compare from head to tail, find the dismatch character.
+
+Try either of the two character, see the rest can be palindrome or not
+
+class Solution:
+    def validPalindrome(self, s: str) -> bool:
+        def find_invalid(t):
+            i, j = 0, len(t) - 1
+            while i < len(t):
+                if t[i] == t[j]:
+                    i += 1
+                    j -= 1
+                else:
+                    return (i, j)
+            return None
+        
+        diff = find_invalid(s)
+        if diff is None:
+            return True
+        
+        op1, op2 = diff[0], diff[1]
+        return find_invalid(s[0:op1]+s[op1+1:]) is None or find_invalid(s[0:op2] + s[op2+1:]) is None
+        
+        
+        
+        
