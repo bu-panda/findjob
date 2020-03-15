@@ -1,0 +1,47 @@
+
+    struct comp { 
+        bool operator()(const pair<int, int>& p1, const pair<int, int>& p2) { 
+            if (p1.first < p2.first) { 
+                return true;
+            }
+            else if (p1.first == p2.first) { 
+                return p2.second > p2.second;
+            }
+            return false;
+        }
+    };
+    
+    struct comp1 { 
+        bool operator()(const pair<int, int>& p1, const pair<int, int>& p2) { 
+            if (p1.second > p2.second) { 
+                return true;
+            } 
+            return false;
+        }
+    };
+    
+    int maxPerformance(int n, vector<int>& speed, vector<int>& efficiency, int k) {
+        int N = efficiency.size();
+        vector<pair<int, int>> eff_idx;
+        for (int i = 0; i < N; i++) { 
+            eff_idx.push_back({efficiency[i], speed[i]});
+        }
+        sort(begin(eff_idx), end(eff_idx), comp());
+        long long ans = 0;
+        //pair<int, int> ans = {0, 0};
+        long long sum_speed = 0;
+        priority_queue<pair<int, int>, vector<pair<int, int>>, comp1> pq;
+        int count = 0;
+        for (int i = N - 1; i >= 0; i--) { 
+            pq.push(eff_idx[i]);
+            sum_speed += eff_idx[i].second;
+            if (pq.size() > k) { 
+                pair<int, int> p = pq.top();
+                pq.pop();
+                sum_speed -= p.second;
+            }
+            //int tmp = sum_speed * eff_idx[i].first;
+            ans = max(ans, sum_speed * eff_idx[i].first);
+        }
+        long long MOD = 1e9 + 7;
+        return ans % MOD;
