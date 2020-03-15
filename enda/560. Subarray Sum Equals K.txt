@@ -1,0 +1,49 @@
+
+最早用的累计和和穷举， N*2, 但是超时了。
+
+class Solution:
+    def subarraySum(self, nums: List[int], k: int) -> int:
+        from collections import defaultdict
+        
+        sn = [0] * (len(nums) + 1)
+        for i in range(1, len(sn)):
+            sn[i] = sn[i-1] + nums[i - 1]
+
+        ans = 0
+        for i in range(1, len(nums) + 1):
+            for j in range(i):
+                if sn[i] - sn[j] == k:
+                    ans += 1
+        return ans
+        
+
+
+其实换个思路，到达第X 位的时候， S[X]出来了，我们需要知满足
+
+S[X] - S[Y] = k 的 Y有多少个可能性
+
+调整等式
+
+S[X] - k = S[Y]
+
+创建一个dict来存，用 S[Y] 做key，注意是S[Y] 不是 Y， 所以随着 从左到右的过程
+
+- 计算 total sum
+- 查询 total sum - k有没有，有的话，为总的解的个数增加相应数值
+- 保存当前的 S[X], d[S[X]] += 1
+
+复杂度 on
+
+class Solution:
+    def subarraySum(self, nums: List[int], k: int) -> int:
+        from collections import defaultdict
+        d = defaultdict(int)
+        d[0] = 1
+        total = 0
+        s = 0
+        for i, n in enumerate(nums):
+            s += n
+            if (s - k) in d:
+                total += d[s - k]
+            d[s] += 1
+        return total

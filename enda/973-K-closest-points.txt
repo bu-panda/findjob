@@ -1,0 +1,42 @@
+用快排的方法解决select K问题，logn的复杂度
+
+class Solution:
+    def kClosest(self, points: List[List[int]], K: int) -> List[List[int]]:
+        def dist(p):
+            return p[0] * p[0] + p[1] * p[1]
+        
+        result = []
+        q = [(dist(x), x) for x in points]
+        self.quickSelect(q, 0, len(q) - 1, K, result)
+        return [x[1] for x in result]
+    
+    def quickSelect(self, q, low, high, K, result):
+        if high - low + 1 == K:
+            result.extend(q[low: high + 1])
+        elif low < high:
+            i = self.partition(q, low, high)
+            count = i - low + 1
+            if count > K:
+                self.quickSelect(q, low, i - 1, K, result)
+            elif count < K:
+                result.extend(q[low: i+1])
+                self.quickSelect(q, i+1, high, K - count, result)
+            else:
+                result.extend(q[low: i+1])
+                
+    
+    def partition(self, q, low, high):
+        i = low - 1
+        pivot = q[high]
+        
+        for j in range(low, high):
+            if q[j] <= pivot:
+                i += 1
+                q[i], q[j] = q[j], q[i]
+        q[i + 1], q[high] = q[high], q[i + 1]
+        return i + 1
+        
+        
+        
+        
+        
