@@ -1,0 +1,65 @@
+class Solution {
+public:
+    vector<int> ans;
+    void help(TreeNode* root) { 
+        if (root == nullptr) { 
+            return;
+        }
+        if (root->left == nullptr && root->right == nullptr) { 
+            return;
+        }
+        if (root->left != nullptr) { 
+            ans.push_back(root->val);
+            help(root->left);
+        }
+        else if (root->right != nullptr) { 
+            ans.push_back(root->val);
+            help(root->right);
+        }
+    }
+    
+    void help_leaf(TreeNode* root) { 
+        if (root == nullptr) { 
+            return;
+        }
+        if (root->left == nullptr && root->right == nullptr) { 
+            ans.push_back(root->val);
+            return;
+        }
+        help_leaf(root->left);
+        help_leaf(root->right);
+        return;
+    }
+    
+    void help_right(TreeNode* root) { 
+        if (root == nullptr) { 
+            return;
+        }
+        if (root->left == nullptr && root->right == nullptr) { 
+            return;
+        }
+        if (root->right != nullptr) { 
+            help_right(root->right);
+            ans.push_back(root->val);
+        }
+        else if (root->left != nullptr) {
+            help_right(root->left);
+            ans.push_back(root->val);
+        }
+    }
+    vector<int> boundaryOfBinaryTree(TreeNode* root) {
+        if (root == nullptr) { 
+            return {};
+        }
+        if (root != nullptr) { 
+            ans.push_back(root->val);
+        }
+        if (root->left == nullptr && root->right == nullptr) { 
+            return ans;
+        }
+        help(root->left);
+        help_leaf(root);
+        help_right(root->right);
+        return ans;
+    }
+};
