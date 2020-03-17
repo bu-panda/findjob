@@ -1,0 +1,43 @@
+标注hard其实不难，用一个单节点的视角来看 询问左右子树分别能做出的最大 和 是多少。 然后在当前节点，可能出现4种方法，
+- 和左树结合
+- 和右树结合
+- 自己玩
+- 一起玩
+
+然后告诉父节点，把我算在内能组成的最大和
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+import sys
+
+class Solution:
+    def maxPathSum(self, root: TreeNode) -> int:
+        self.result = root.val
+        self.solve(root)
+        return self.result
+    
+    def solve(self, root):
+        if root is None:
+            return 0
+        
+        left_val = self.solve(root.left)
+        right_val = self.solve(root.right)
+        
+        self.result = max(
+            self.result,
+            root.val + left_val,
+            root.val + right_val,
+            root.val,
+            root.val + left_val + right_val
+        )
+        return max(root.val, root.val + left_val, root.val + right_val)
+        
+        
+        
+        
+        

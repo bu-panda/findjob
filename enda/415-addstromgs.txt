@@ -1,0 +1,36 @@
+easy
+
+class Solution:
+    def addStrings(self, num1: str, num2: str) -> str:
+        if len(num1) < len(num2):
+            return self.addStrings(num2, num1)
+        
+        def dsum(d1, d2, flag):
+            s = int(d1) + int(d2) + flag
+            if s >= 10:
+                flag, d = 1, str(s - 10)
+            else:
+                flag, d = 0, str(s)
+            return flag, d
+    
+        n1, n2 = num1[::-1], num2[::-1]
+        flag, i = 0, 0
+        result = []
+        while i < len(n2):
+            flag, d = dsum(n1[i], n2[i], flag)
+            result.append(d)
+            i += 1
+        
+        while i < len(n1):
+            flag, d = dsum(n1[i], "0", flag)
+            result.append(d)
+            i += 1
+        
+        if flag:
+            result.append("1")
+        ans = "".join(result)
+        return ans[::-1]
+            
+        
+        
+        

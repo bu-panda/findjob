@@ -1,0 +1,54 @@
+创建树的迭代器就行了
+
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+"""
+
+class TreeIterator:
+    def __init__(self, root):
+        self.stack = []
+        self.pushleft(root)
+    
+    def pushleft(self, node):
+        while node:
+            self.stack.append(node)
+            node = node.left
+    
+    def get_next(self):
+        if self.stack:
+            node = self.stack.pop()
+            if node.right is not None:
+                self.pushleft(node.right)
+            return node
+        else:
+            return None
+                
+
+class Solution:
+    def treeToDoublyList(self, root: 'Node') -> 'Node':
+        head = None
+        
+        tree_iterator = TreeIterator(root)
+        node = tree_iterator.get_next()
+        if node is None:
+            return None
+        else:
+            head = node
+        
+        prev, cur = node, None
+        while True:
+            cur = tree_iterator.get_next()
+            if cur is None:
+                break
+            prev.right = cur
+            cur.left = prev
+            prev = cur
+        prev.right = head
+        head.left = prev
+        return head
+        

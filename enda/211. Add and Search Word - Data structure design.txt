@@ -1,0 +1,130 @@
+BFS & DFS 版本，创建TRIE TREE 然后看能不能遍历到一个叶子节点
+
+class Node:
+    def __init__(self, c, is_leaf):
+        self.d = {}
+        self.is_leaf = is_leaf
+        self.val = c
+
+class WordDictionary:
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.root = Node(None, False)
+        
+
+    def addWord(self, word: str) -> None:
+        """
+        Adds a word into the data structure.
+        """
+        root = self.root
+        for i, c in enumerate(word):
+            if i == len(word) - 1:
+                node = Node(c, True)    
+            else:
+                node = Node(c, False)
+                
+            if c not in root.d:
+                root.d[c] = node
+            root = root.d[c]
+        
+
+    def search(self, word: str) -> bool:
+        """
+        Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one let
+        ter.
+        """
+        # print("Searching {}".format(word))
+        r = self.root
+        scope = [r]
+        for c in word:
+            next_scope = []
+            for s in scope:
+                if c == ".":
+                    children = s.d.values()
+                else:
+                    if c in s.d:
+                        children = [s.d[c]]
+                    else:
+                        children = []
+                if children:
+                    next_scope.extend(children)
+            if next_scope:
+                scope = next_scope
+            else:
+                return False
+        for node in scope:
+            if node.is_leaf:
+                return True
+        return False
+
+            
+        
+        
+
+class Node:
+    def __init__(self, c, is_leaf):
+        self.d = {}
+        self.is_leaf = is_leaf
+        self.val = c
+
+class WordDictionary:
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.root = Node(None, False)
+        
+
+    def addWord(self, word: str) -> None:
+        """
+        Adds a word into the data structure.
+        """
+        root = self.root
+        for i, c in enumerate(word):
+            if i == len(word) - 1:
+                node = Node(c, True)    
+            else:
+                node = Node(c, False)
+                
+            if c not in root.d:
+                root.d[c] = node
+            root = root.d[c]
+        
+
+    def search(self, word: str) -> bool:
+        """
+        Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one let
+        ter.
+        """
+        return self.dfs(word, 0, self.root)
+        
+    
+    def dfs(self, word, idx, node):
+        if node is None:
+            return False
+        if idx == len(word):
+            return node.is_leaf
+        
+        c = word[idx]
+        ans = False
+        if c == ".":
+            for next_node in node.d.values():
+                if self.dfs(word, idx + 1, next_node):
+                    return True
+        else:
+            return self.dfs(word, idx + 1, node.d.get(c, None))
+        
+
+            
+        
+        
+
+
+# Your WordDictionary object will be instantiated and called as such:
+# obj = WordDictionary()
+# obj.addWord(word)
+# param_2 = obj.search(word)

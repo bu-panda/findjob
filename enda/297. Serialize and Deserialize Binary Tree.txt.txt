@@ -1,0 +1,63 @@
+不难，层序，或者说BFS就行了。注意null的处理
+
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Codec:
+
+    def serialize(self, root):
+        """Encodes a tree to a single string.
+        
+        :type root: TreeNode
+        :rtype: str
+        """
+        q = [root]
+        rs = []
+        while q:
+            node = q.pop(0)
+            if node is None:
+                rs.append("null")
+            else:
+                rs.append(str(node.val))
+                q.append(node.left)
+                q.append(node.right)
+        return ",".join(rs)
+            
+            
+
+    def deserialize(self, data):
+        """Decodes your encoded data to tree.
+        
+        :type data: str
+        :rtype: TreeNode
+        """
+        def build(v):
+            if v == "null":
+                return None
+            else:
+                return TreeNode(int(v))
+        
+        data = data.split(",")
+        v = data.pop(0)
+        root = build(v)
+        q = [root]
+        while data:
+            node = q.pop(0)
+            if node is not None:
+                node.left = build(data.pop(0))
+                node.right = build(data.pop(0))
+                q.append(node.left)
+                q.append(node.right)
+        return root
+        
+        
+        
+        
+
+# Your Codec object will be instantiated and called as such:
+# codec = Codec()
+# codec.deserialize(codec.serialize(root))

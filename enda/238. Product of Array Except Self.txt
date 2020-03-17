@@ -1,0 +1,20 @@
+记录下两边的累计和
+
+也可以记录一边，然后从另外一边乘过来，可以inplace
+
+class Solution:
+    def productExceptSelf(self, nums: List[int]) -> List[int]:
+        accul = [1] * (1 + len(nums))
+        accur = [1] * (1 + len(nums))
+        
+        for i, n in enumerate(nums):
+            accul[i+1] = accul[i] * n
+        
+        for i, n in enumerate(nums[::-1]):
+            accur[i+1] = accur[i] * n
+        
+        rs = []
+        for i in range(0, len(nums)):
+            x, y = i, len(nums) - i - 1
+            rs.append(accul[x] * accur[y])
+        return rs
