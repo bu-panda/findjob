@@ -1,0 +1,42 @@
+class ZigzagIterator {
+public:
+    vector<int> idx;
+    vector<int> size;
+    int i;
+    vector<vector<int>> data;
+    ZigzagIterator(vector<int>& v1, vector<int>& v2) {
+        idx.assign(2, 0);
+        size.push_back(v1.size());
+        size.push_back(v2.size());
+        i = 0;
+        data.push_back(v1);
+        data.push_back(v2);
+        return;
+    }
+
+    int next() {
+        int ans = data[i][idx[i]];
+        //Note:记得idx[i]++;
+        idx[i]++;
+        //Note: i++ 要放在next里，如果放在hasNext里，连续调用两次hasNext就会有问题。
+        i = (i + 1) % idx.size();
+        return ans;
+    }
+
+    bool hasNext() {
+        int count = 0;
+        //Note:用一个index从i开始走，如果走了一圈还没找到合适的那么就return false
+        int j = i;
+        for (; count < idx.size(); j = (j + 1) % idx.size()) { 
+            if (idx[j] < size[j]) { 
+                break;
+            }
+            count++;
+        }
+        i = j;
+        if (count < idx.size()) { 
+            return true;
+        }
+        return false;
+    }
+};
