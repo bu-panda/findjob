@@ -1,0 +1,27 @@
+Easy, 后续遍历，每个节点计算自己左右能有的最长枝丫， 加上自己的一份，构成
+经过当前节点的最长路径。向父节点汇报左右路径中长的那个，加上自己一份
+
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def diameterOfBinaryTree(self, root: TreeNode) -> int:
+        self.result = 0
+        
+        def traverse(node):
+            if node is None:
+                return 0
+            
+            lh, rh = traverse(node.left), traverse(node.right)
+            self.result = max(self.result, lh + rh + 1)
+            return max(lh, rh) + 1
+        
+        
+        traverse(root)
+        return 0 if self.result == 0 else self.result - 1
+        

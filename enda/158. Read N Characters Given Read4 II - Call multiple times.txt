@@ -1,0 +1,71 @@
+"""
+The read4 API is already defined for you.
+
+    @param buf, a list of characters
+    @return an integer
+    def read4(buf):
+
+# Below is an example of how the read4 API can be called.
+file = File("abcdefghijk") # File is "abcdefghijk", initially file pointer (fp) points to 'a'
+buf = [' '] * 4 # Create buffer with enough space to store characters
+read4(buf) # read4 returns 4. Now buf = ['a','b','c','d'], fp points to 'e'
+read4(buf) # read4 returns 4. Now buf = ['e','f','g','h'], fp points to 'i'
+read4(buf) # read4 returns 3. Now buf = ['i','j','k',...], fp points to end of file
+比几年前写的好了很多。注意使用buffer remain 和 buffer offset来控制buffer
+
+- 如果只靠之前剩下的buffer就能完成，那就只用buffer
+- 如果靠buffer不能完成，先清空buffer
+- 然后循环，直到读满或者文件读完退出
+
+
+
+
+"""
+class Solution:
+    def __init__(self):
+        self.buffer = [""] * 4
+        self.file_end = False
+        self.buffer_remain = 0
+        self.buffer_offset = 0
+        
+    
+    def read(self, buf, n):
+        """
+        :type buf: Destination buffer (List[str])
+        :type n: Number of characters to read (int)
+        :rtype: The number of actual characters read (int)
+        """
+        if self.buffer_remain >= n:
+            for i in range(n):
+                buf[i] = self.buffer[self.buffer_offset]
+                self.buffer_offset += 1
+            self.buffer_remain -= n
+            return n
+        total = 0
+        for i in range(self.buffer_remain):
+            buf[i] = self.buffer[self.buffer_offset]
+            self.buffer_offset += 1
+        total += self.buffer_remain
+        self.buffer_offset = 0
+        self.buffer_remain = 0
+        while True:
+            # Refill buffer
+            read_out = read4(self.buffer)
+            if read_out == 0:
+                return total
+            self.buffer_remain = read_out
+            self.buffer_offset = 0
+            
+            while total < n and self.buffer_remain > 0:
+                buf[total] = self.buffer[self.buffer_offset]
+                self.buffer_offset += 1
+                self.buffer_remain -= 1
+                total += 1
+            
+            if total == n:
+                return n
+        
+            
+            
+        
+        

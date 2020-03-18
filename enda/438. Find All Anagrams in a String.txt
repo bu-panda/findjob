@@ -1,0 +1,26 @@
+做一个指纹，可以用Counter，用Counter没有这么复杂
+
+class Solution:
+    def findAnagrams(self, s: str, p: str) -> List[int]:
+        if len(p) > len(s):
+            return []
+        
+        fp = [0] * 26
+        for c in p:
+            fp[ord(c) - ord('a')] += 1
+        fp = tuple(fp)
+        ans = []
+        fp_counter = [0] * 26
+        for i, c in enumerate(s):
+            fp_counter[ord(c) - ord('a')] += 1
+            if i < len(p) - 1:
+                continue
+            
+            tmp = tuple(fp_counter)
+            if tmp == fp:
+                ans.append(i - len(p) + 1)
+            
+            head_c = s[i - len(p) + 1]
+            fp_counter[ord(head_c) - ord("a")] -= 1
+        return ans
+                

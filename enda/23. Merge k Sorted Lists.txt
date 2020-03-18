@@ -1,0 +1,58 @@
+
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+经典题，mergesort的linkedlist版本。 NLOGN 复杂度
+
+class Solution:
+    def mergeKLists(self, lists: List[ListNode]) -> ListNode:
+        if not lists:
+            return None
+        return self.solve(lists, 0, len(lists) - 1)
+    
+    def solve(self, lists, left, right):
+        if left == right:
+            return lists[left]
+        elif left + 1 == right:
+            return self.merge(lists[left], lists[right])
+        else:
+            mid = left + (right - left) // 2
+            return self.merge(
+                self.solve(lists, left, mid),
+                self.solve(lists, mid+1, right)
+            )
+    
+    def merge(self, n1, n2):
+        if n1 is None:
+            return n2
+        if n2 is None:
+            return n1
+        
+        dummy = ListNode(-1)
+        head = dummy
+        cur1, cur2 = n1, n2
+        while cur1 is not None and cur2 is not None:
+            if cur1.val > cur2.val:
+                dummy.next = cur2
+                dummy = cur2
+                cur2 = cur2.next
+                dummy.next = None
+            else:
+                dummy.next = cur1
+                dummy = cur1
+                cur1 = cur1.next
+                dummy.next = None
+        if cur1 is None:
+            dummy.next = cur2
+        else:
+            dummy.next = cur1
+        ans = head.next
+        del head
+        return ans
+                
+        
+        

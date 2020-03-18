@@ -1,0 +1,30 @@
+层序遍历，先加右边再加左边。每一次一层结束的时候，把下一层的第一个添加到结果
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def rightSideView(self, root: TreeNode) -> List[int]:
+        if root is None:
+            return []
+        q = [root]
+        next_level = []
+        ans = [root.val]
+        while q:
+            node = q.pop(0)
+            if node.right != None:
+                next_level.append(node.right)
+            if node.left != None:
+                next_level.append(node.left)
+            if not q and next_level:
+                ans.append(next_level[0].val)
+                q.extend(next_level)
+                next_level = []
+        return ans
+            
+            
+        
