@@ -1,0 +1,21 @@
+这个一开始没有思路。
+
+列举所有哦的interval, 比较的时候取 low的大值和 high的小值，如果 l < h 说明重叠，算出重叠部分。 （这个方法可以作为一般的判断重叠的办法）
+
+注意，high值小的区间不会再跟其他区间重合，去掉
+
+class Solution:
+    def intervalIntersection(self, A: List[List[int]], B: List[List[int]]) -> List[List[int]]:
+        i = j = 0
+        ans = []
+        while i < len(A) and j < len(B):
+            l = max(A[i][0], B[j][0])
+            h = min(A[i][1], B[j][1])
+            if l <= h:
+                ans.append([l, h])
+            
+            if A[i][1] > B[j][1]:
+                j += 1
+            else:
+                i += 1
+        return ans
