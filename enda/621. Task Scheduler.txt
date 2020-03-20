@@ -1,0 +1,35 @@
+用堆来计数。有几个需要注意的
+- python需要把次数反过来，对于N 个slot，每次要尝试从堆中间pop N次，可以pop出空的来，表示无法执行任何
+- 如果pop出来元素，他的个数为0，则不加入下一轮执行， 当 q和下一轮执行都没有了，退出程序
+
+from collections import Counter
+import heapq
+class Solution:
+    def leastInterval(self, tasks: List[str], n: int) -> int:
+        q = []
+        for task, c in Counter(tasks).most_common():
+            heapq.heappush(q, -c)
+        
+        ans = 0
+        while q:
+            tmp = []
+            i = 0
+            while i <= n:
+                if q:
+                    r_count = heapq.heappop(q)
+                    count = -r_count
+                    if count > 1:
+                        tmp.append(-(count - 1))
+                ans += 1
+                if not q and not tmp:
+                    break
+                i += 1
+            for e in tmp:
+                heapq.heappush(q, e)
+        return ans
+                        
+            
+                
+            
+                
+            
