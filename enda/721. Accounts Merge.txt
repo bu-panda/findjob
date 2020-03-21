@@ -1,0 +1,75 @@
+Union Found。 
+
+这个比较麻烦，因为名字会重合。
+- 首先写出union found原型
+- 对于每一个email， 加入union found
+- 对于每个account, 所有email与第一个email进行union, 产生（name, unique_root_email) 数列
+- 对于上述数列，求出那个 root email的全局 root，
+- 根据全局root进行index归类
+- 对于每个root email， 去找到对应的account，记录name, emails，用set去重
+- 加入列表，返回结果
+
+from collections import defaultdict, Counter
+
+class UF:
+    def __init__(self):
+        self.route = {}
+        
+    def union(self, x, y):
+        rx, ry = self.root(x), self.root(y)
+        if rx != ry:
+            self.route[ry] = rx
+        
+    
+    def root(self, x):
+        while x != self.route[x]:
+            x = self.route[x]
+        return x
+    
+    def add(self, email):
+        self.route[email] = email
+        
+    def is_root(self, email):
+        return self.root(email) == email
+
+class Solution:
+    def accountsMerge(self, accounts: List[List[str]]) -> List[List[str]]:
+        email_uf = UF()
+        for i, account in enumerate(accounts):
+            name, emails = account[0], account[1:]
+            for e in emails:
+                email_uf.add(e)
+        
+        transformed = []
+        for i, account in enumerate(accounts):
+            name, emails = account[0], account[1:]
+            for e in emails[1:]:
+                email_uf.union(emails[0], e)
+            
+            transformed.append([name, emails[0]])
+        
+        transformed = [[name, email_uf.root(e)] for name, e in transformed]
+
+        group = defaultdict(list)
+        for i, (name, email) in enumerate(transformed):
+            group[email].append(i)
+        ans = []
+        for e in group:
+            name = None
+            emails = set()
+            for idx in group[e]:
+                name = accounts[idx][0]
+                for email in accounts[idx][1:]:
+                    emails.add(email)
+            emails = sorted(list(emails))
+            emails.insert(0, name)
+            ans.append(emails)
+        return ans
+            
+                
+            
+            
+        
+        
+
+        

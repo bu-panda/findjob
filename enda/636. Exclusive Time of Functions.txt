@@ -1,0 +1,37 @@
+很恶心的是默认一个function可以打断另外一个function，
+
+single thread 确保了用stack总是能找到当前活跃的function。 用一个dict记录每个function上次开始的时间
+
+from collections import defaultdict
+class Solution:
+    def exclusiveTime(self, n: int, logs: List[str]) -> List[int]:
+        active_functions = defaultdict(list)
+        ans = defaultdict(int)
+        active_stack = []
+        for i, log in enumerate(logs):
+            fid, action, time = log.split(":")
+            fid, time = int(fid), int(time)
+            
+            if not active_stack:
+                active_functions[fid].append(time)
+                active_stack.append(fid)
+                continue
+            
+            if action == "start":
+                pre_active = active_stack[-1]
+                ans[pre_active] += (time - active_functions[pre_active][-1])
+                active_functions[fid].append(time)
+                active_stack.append(fid)
+            else:
+                ans[fid] += (time - active_functions[fid][-1] + 1)
+                active_stack.pop()
+                if active_stack:
+                    active_functions[active_stack[-1]].append(time + 1)
+                    
+        result = []
+        for k in sorted(ans.keys()):
+            result.append(ans[k])
+                    
+        return result
+        
+        

@@ -1,0 +1,42 @@
+
+这个题很有意思，首先是最原始的计算方法
+
+C[i][j] = S（k=1, -> k=col(A))A[i][k] * B[k][j]
+
+class Solution:
+    def multiply(self, A: List[List[int]], B: List[List[int]]) -> List[List[int]]:
+        row_a, col_a, rol_b, col_b = len(A), len(A[0]), len(B), len(B[0])
+        res = [[0]*col_b for _ in range(row_a)]
+        for r_a in range(row_a):
+            for c_b in range(col_b):
+                for c_a in range(col_a):
+                        res[r_a][c_b] += A[r_a][c_a]*B[c_a][c_b]
+        return res
+
+
+考虑到大量 A[r_a][c_a]都是0， 我们可以用判断来代替乘法和加法
+
+class Solution:
+    def multiply(self, A: List[List[int]], B: List[List[int]]) -> List[List[int]]:
+        row_a, col_a, rol_b, col_b = len(A), len(A[0]), len(B), len(B[0])
+        res = [[0]*col_b for _ in range(row_a)]
+        for r_a in range(row_a):
+            for c_a in range(col_a):
+                for c_b in range(col_b):
+                    if A[r_a][c_a]:
+                        # We can see c_a always equal to r_b, final matrix size is r_a * c_b
+                        res[r_a][c_b] += A[r_a][c_a]*B[c_a][c_b]
+        return res
+		
+不过从性能的角度讲，只要 A[r_a][c_a] 是零，下边整个循环都是不必要的
+class Solution:
+    def multiply(self, A: List[List[int]], B: List[List[int]]) -> List[List[int]]:
+        row_a, col_a, rol_b, col_b = len(A), len(A[0]), len(B), len(B[0])
+        res = [[0]*col_b for _ in range(row_a)]
+        for r_a in range(row_a):
+            for c_a in range(col_a):
+                if A[r_a][c_a]:
+                    for c_b in range(col_b):
+                    
+                        res[r_a][c_b] += A[r_a][c_a]*B[c_a][c_b]
+        return res
