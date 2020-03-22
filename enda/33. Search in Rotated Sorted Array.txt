@@ -1,0 +1,47 @@
+二分搜索，看看有序的那边能不能cover，能的话就二分搜，不能的话，在另外一边调用旋转搜索
+
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        if not nums:
+            return -1
+        return self.rsearch(nums, target, 0, len(nums) - 1)
+    
+    def rsearch(self, nums, target, left, right):
+        if left == right:
+            if nums[left] == target:
+                return left
+            else:
+                return -1
+        
+        mid = left + (right - left) // 2
+        if self.is_ordered(nums, left, mid):
+            if self.is_covered(nums, left, mid, target):
+                idx = bisect.bisect_left(nums, target, left, mid)
+                if nums[idx] == target:
+                    return idx
+                else:
+                    return -1
+            else:
+                return self.rsearch(nums, target, mid + 1, right)
+        else:
+            if self.is_covered(nums, mid, right, target):
+                idx = bisect.bisect_left(nums, target, mid, right)
+                if nums[idx] == target:
+                    return idx
+                else:
+                    return -1
+            else:
+                return self.rsearch(nums, target, left, mid - 1)
+    
+    
+    def is_ordered(self, nums, l, r):
+        return nums[l] <= nums[r]
+    
+    def is_covered(self, nums, l, r, target):
+        return nums[l] <= target <= nums[r]
+            
+        
+    
+        
+        
+        

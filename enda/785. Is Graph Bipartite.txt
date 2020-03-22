@@ -1,0 +1,29 @@
+用染色的办法。 不过逐一要遍历所有index
+
+from collections import defaultdict
+class Solution:
+    def isBipartite(self, graph: List[List[int]]) -> bool:
+        if not graph:
+            return True
+        visit = {}
+        for i in range(len(graph)):
+            if i in visit:
+                continue
+            q = [i]
+            visit[i] = 1
+            while q:
+                node = q.pop(0)
+                color = visit[node]
+                for n in graph[node]:
+                    if n in visit:
+                        if visit[n] != -color:
+                            return False
+                    else:
+                        q.append(n)
+                        visit[n] = -color
+        return True
+                    
+                    
+            
+        
+        

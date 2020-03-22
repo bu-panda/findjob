@@ -1,0 +1,36 @@
+可以用遍历，也可以利用特性做一边， logN
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def closestValue(self, root: TreeNode, target: float) -> int:
+        self.result = float('inf')
+        self.val = None
+        self.traverse(root, target)
+        return self.val
+    
+    def traverse(self, node, target):
+        if node is None:
+            return 
+        
+        diff = abs(node.val - target)
+        if diff < self.result:
+            self.val = node.val
+            self.result = diff
+        
+        if node.val > target:
+            self.traverse(node.left, target)
+        elif node.val < target:
+            self.traverse(node.right, target)
+        else:
+            return
+        
+        
+            
+            
+        
