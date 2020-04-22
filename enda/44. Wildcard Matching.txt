@@ -1,0 +1,32 @@
+这个*是可以匹配任何串的，另外一题用dp，*匹配0-n前一个字符
+
+class Solution:
+    def isMatch(self, s: str, p: str) -> bool:
+        i, j = 0, 0
+        star_idx = -1
+        match_i = -1
+        while i < len(s):
+            # 当前字母匹配
+            if j < len(p) and (s[i] == p[j] or p[j] == "?"):
+                i += 1
+                j += 1
+            # 当前不匹配，是个星号，跳过pattern,记录下星号位置
+            elif j < len(p) and p[j] == "*":
+                star_idx = j
+                j = j + 1
+                match_i = i
+            # 星号之后的不匹配，pattern reset 到 星号后，string从上次星号match的地方跳过一个字符重做
+            elif star_idx != -1:
+                match_i += 1
+                i = match_i
+                j = star_idx + 1
+            else:
+                return False
+        # 匹配完成后，必须只能有星号
+        for k in range(j, len(p)):
+            if p[k] != "*":
+                return False
+        return True
+        
+        
+        

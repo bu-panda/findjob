@@ -1,0 +1,34 @@
+回溯+剪问题，
+
+每次遇到都便利可能的操作，记下来当前使用的string和可能的结果，用 idx和 S做key
+
+class Solution:
+    def findTargetSumWays(self, nums: List[int], S: int) -> int:
+        ops = []
+        mem = {}
+        return self.solve(nums, S, ops, mem)
+    
+    
+    def solve(self, nums, S, ops, mem):
+        if len(ops) == len(nums) and S == 0:
+            return 1
+        elif len(ops) == len(nums) and S != 0:
+            return 0
+        
+        idx = len(ops)
+        if (idx,S) in mem:
+            return mem[(idx, S)]
+        
+        ans = 0
+        options = ["+", "-"]
+        for op in options:
+            ops.append(op)
+            if op == "+":
+                ans += self.solve(nums, S - nums[idx], ops, mem)
+            else:
+                ans += self.solve(nums, S + nums[idx], ops, mem)
+            ops.pop()
+        mem[(idx, S)] = ans
+        return ans
+        
+        

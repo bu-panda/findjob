@@ -1,0 +1,26 @@
+我们创建一个数组dp，他的意思是，对于第 idx th数，你比我大，你就可以成为下一个
+e.g  [1,2,100, 4] -> [1, 2, 100] 这时候如果来了4，他可以把100替换成4，因为他的插入位置是2， 如果来的是101，插入位置是3，我们
+可以获得一个更长的序列，所以方法是
+
+bisect left，找到插入位置，左边的一定要比自己小。看看是不是插入到了一个新的上限位置，如果是的，ans += 1
+nlogn
+
+
+import bisect
+class Solution:
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        if not nums:
+            return 0
+        
+        dp = [0] * len(nums)
+        ans = 0
+        for i, n in enumerate(nums):
+            idx = bisect.bisect_left(dp, n, 0, ans)
+            dp[idx] = n
+            if idx == ans:
+                ans += 1
+        return ans
+            
+                
+        
+        

@@ -1,0 +1,50 @@
+最重要的就是定义那个split linked list
+
+将链表弄成  左链表，跟，右链表，然后在左右递归调用
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def sortedListToBST(self, head: ListNode) -> TreeNode:
+        if not head:
+            return None
+        
+        h1, h2, node = self.split_linkedlist(head)
+        root = TreeNode(node.val)
+        root.left = self.sortedListToBST(h1)
+        root.right = self.sortedListToBST(h2)
+        return root
+    
+    def split_linkedlist(self, node):
+        if node is None:
+            return None, None, None
+        if node.next is None:
+            return None, None, node
+        
+        dummy = ListNode(-1)
+        dummy.next = node
+        
+        slow, fast = node, node
+        while fast is not None and fast.next is not None:
+            slow = slow.next
+            dummy = dummy.next
+            fast = fast.next.next
+        h1, h2 = node, slow.next
+        dummy.next = None
+        slow.next = None
+        return h1, h2, slow
+        
+        
+        
+        

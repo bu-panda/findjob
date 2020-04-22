@@ -1,0 +1,26 @@
+跟3sum一样，不过需要用abs来记录
+
+class Solution:
+    def threeSumClosest(self, nums: List[int], target: int) -> int:
+        nums.sort()
+        ans, min_diff = None, float('inf')
+        for i in range(len(nums) - 2):
+            n1 = nums[i]
+            rest = target - n1
+            j, k = i + 1, len(nums) - 1
+            while j < k:
+                n2, n3 = nums[j], nums[k]
+                s = n2 + n3
+                if s > rest:
+                    k -= 1
+                elif s < rest:
+                    j += 1
+                else:
+                    return n1 + s
+                
+                if abs(n1 + s - target) < min_diff:
+                    min_diff = abs(n1 + s - target)
+                    ans = n1 + s
+        return ans
+                    
+             

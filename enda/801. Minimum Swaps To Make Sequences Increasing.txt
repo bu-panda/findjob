@@ -1,0 +1,36 @@
+这个很有意思，假设有 
+
+n1, s1 他们表示 之前没有换的解答，之前换的解答
+
+当 n+1个元素来的时候
+
+如果本身符合升序
+
+这次不换的答案是 min(n2, n1)
+换的话，s2必定是 s1+1，但是到这儿还不确定能不能换
+
+接下来，如果还满足交换升序
+n2就是 前一次换了和当前不换的最小值
+s2就是 当前换的值，和前一次不换这一次换 n1+1
+
+迭代 2个变量
+
+返回小的
+class Solution:
+    
+    def minSwap(self, A: List[int], B: List[int]) -> int:
+        n1, s1 = 0, 1
+        for i in range(1, len(A)):
+            n2, s2 = float('inf'), float('inf')
+            if A[i - 1] < A[i] and B[i - 1] < B[i]:
+                n2 = min(n2, n1)
+                s2 = s1 + 1
+            if A[i - 1] < B[i] and B[i - 1] < A[i]:
+                n2 = min(s1, n2)
+                s2 = min(s2, n1 + 1)
+            n1, s1 = n2, s2
+        return min(n1, s1)
+            
+            
+        
+        

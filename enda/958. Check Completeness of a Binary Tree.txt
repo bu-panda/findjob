@@ -1,0 +1,22 @@
+层序便利，不过要把None也加进去.
+
+碰到第一个None在Q里边的时候从循环出去，此时必须全部的元素都是None
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def isCompleteTree(self, root: TreeNode) -> bool:
+        q = [root]
+        while q:
+            node = q.pop(0)
+            if node is None:
+                break
+            q.append(node.left)
+            q.append(node.right)
+        
+        return not any(q)

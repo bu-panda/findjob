@@ -1,0 +1,37 @@
+这题技巧太强了。
+
+找到最高的地方，然后往中间扫描
+
+class Solution:
+    def trap(self, height: List[int]) -> int:
+        while height and height[0] == 0:
+            height.pop(0)
+        
+        while height and height[-1] == 0:
+            height.pop()
+            
+        if not height:
+            return 0
+        
+        max_val, max_idx = float('-inf'), -1
+        for i, n in enumerate(height):
+            if n > max_val:
+                max_val = n
+                max_idx = i
+        ans = 0
+        cur_max = float('-inf')
+        for i in range(0, max_idx):
+            h = height[i]
+            if h >= cur_max:
+                cur_max = h
+            else:
+                ans += (cur_max - h)
+        
+        cur_max = float('-inf')
+        for i in range(len(height) - 1, max_idx, -1):
+            h = height[i]
+            if h >= cur_max:
+                cur_max = h
+            else:
+                ans += (cur_max - h)
+        return ans

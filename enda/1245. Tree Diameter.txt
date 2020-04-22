@@ -1,0 +1,47 @@
+转成图来做，因为是树，所以我们可以做：
+
+- 找到所有的child tree
+- 当前节点能取得的最大路径长度是 top2 child branch length + 1,如果没有2个那就取大的
+- 对上面的node反映 max(top2) +1 表示经过我能找到的最长的一条路
+
+
+from collections import defaultdict
+import heapq
+class Solution:
+    def treeDiameter(self, edges: List[List[int]]) -> int:
+        if not edges:
+            return 0
+        
+        tree = defaultdict(list)
+        for b, e in edges:
+            tree[b].append(e)
+            tree[e].append(b)
+        
+        root = edges[0][0]
+        self.ans = 0
+        visit = set()
+        self.traverse(tree, root, visit)
+        return self.ans - 1
+    
+    def traverse(self, tree, root, visit):        
+        branch_length = []
+        visit.add(root)
+        for branch in tree[root]:
+            if branch in visit:
+                continue
+            
+            child_branch_length = self.traverse(tree, branch, visit)
+            heapq.heappush(branch_length, -child_branch_length)
+        visit.remove(root)
+        
+        ans = 0
+        if len(branch_length) >= 2:
+            top1, top2 = -heapq.heappop(branch_length), -heapq.heappop(branch_length)
+        elif len(branch_length) == 1:
+            top1, top2 = -heapq.heappop(branch_length), 0
+        else:
+            top1, top2 = 0, 0
+        
+        self.ans = max(self.ans, top1 + top2 + 1)
+        return max(top1, top2) + 1
+    

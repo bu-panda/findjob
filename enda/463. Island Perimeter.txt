@@ -1,0 +1,42 @@
+标准BFS， 不过注意的是，有多少neighbor， 这个就得减去多少个边
+class Solution:
+    def islandPerimeter(self, grid: List[List[int]]) -> int:
+        if not grid:
+            return 0
+        
+        row, col = len(grid), len(grid[0])
+        visit = set()
+        for i, row in enumerate(grid):
+            for j, e in enumerate(row):
+                if e == 1:
+                    visit.add((i, j))
+                    break
+            if visit:
+                break
+        
+        if not visit:
+            return 0
+        
+        def get_neighbors(grid, x, y):
+            row, col = len(grid), len(grid[0])
+            move = [[0, 1], [0, -1], [1, 0], [-1, 0]]
+            ans = []
+            for dx, dy in move:
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < row and 0 <= ny < col and grid[nx][ny] == 1:
+                    ans.append((nx, ny))
+            return ans
+        
+        q = [(i, j)]
+        ans = 0
+        while q:
+            x, y = q.pop(0)
+            neighbors = get_neighbors(grid, x, y)
+            ans += 4
+            ans -= len(neighbors)
+            for nx, ny in neighbors:
+                if (nx, ny) not in visit:
+                    visit.add((nx, ny))
+                    q.append((nx, ny))
+        return ans
+        

@@ -1,0 +1,56 @@
+转成了图做BFS
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+from collections import defaultdict
+
+class Solution:
+    def distanceK(self, root: TreeNode, target: TreeNode, K: int) -> List[int]:
+        if K < 0:
+            return None
+        if K == 0:
+            return [target.val]
+        graph = defaultdict(set)
+        
+        def traverse(node, graph):
+            if node is None:
+                return 
+            
+            if node.left:
+                graph[node.val].add(node.left.val)
+                graph[node.left.val].add(node.val)
+                traverse(node.left, graph)
+            
+            if node.right:
+                graph[node.val].add(node.right.val)
+                graph[node.right.val].add(node.val)
+                traverse(node.right, graph)
+        
+        traverse(root, graph)
+        next_level = []
+        q = [target.val]
+        visit = set([target.val])
+        d = 0
+        while q:
+            node = q.pop(0)
+            for neighbor in graph[node]:
+                if neighbor not in visit:
+                    visit.add(neighbor)
+                    next_level.append(neighbor)
+            
+            if not q and next_level:
+                d += 1
+                if d == K:
+                    return next_level
+                else:
+                    q = next_level
+                    next_level = []
+        return []
+            
+            
+        

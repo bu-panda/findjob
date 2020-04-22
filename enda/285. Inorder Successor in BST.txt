@@ -1,0 +1,47 @@
+写个iterator，找到了就准备记录下一个
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class TreeIterator:
+    def __init__(self, root):
+        self.stack = []
+        self.next_element = None
+        self.push_left(root)
+
+    def has_next(self):
+        return len(self.stack) != 0 
+    
+    def get_next(self):
+        node = self.stack.pop()
+        if node.right is not None:
+            self.push_left(node.right)
+        return node
+    
+    def push_left(self, node):
+        while node:
+            self.stack.append(node)
+            node = node.left
+            
+            
+
+class Solution:
+    def inorderSuccessor(self, root: 'TreeNode', p: 'TreeNode') -> 'TreeNode':
+        ti = TreeIterator(root)
+        find = False
+        while ti.has_next():
+            node = ti.get_next()
+            if find:
+                return node
+            elif node.val == p.val:
+                find = True
+        return None
+            
+            
+        
+        
+        

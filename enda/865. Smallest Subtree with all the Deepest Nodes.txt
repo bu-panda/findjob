@@ -1,0 +1,32 @@
+这个的关键在于
+
+对于左右
+- 如果一样的深度，本节点是答案
+- 否则，深的那边，那个子节点是答案
+
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def subtreeWithAllDeepest(self, root: TreeNode) -> TreeNode:
+        def traverse(node):
+            if node is None:
+                return None, 0
+            
+            left, ld = traverse(node.left)
+            right, rd = traverse(node.right)
+            
+            if ld == rd:
+                return node, ld + 1
+            elif ld > rd:
+                return left, ld + 1
+            else:
+                return right, rd + 1
+            
+        return traverse(root)[0]
+            

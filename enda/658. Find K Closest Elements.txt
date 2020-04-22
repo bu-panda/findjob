@@ -1,0 +1,16 @@
+它想要index是排好序的，只能带上index一起排序了
+
+import heapq
+
+class Solution:
+    def findClosestElements(self, arr: List[int], k: int, x: int) -> List[int]:
+        candidates = []
+        dist = lambda n: abs(n - x)
+        for i, num in enumerate(arr):
+            if len(candidates) < k:
+                heapq.heappush(candidates, (-dist(num), i, num))
+            else:
+                if -dist(num) > candidates[0][0]:
+                    heapq.heappushpop(candidates, (-dist(num), i, num))
+        #result = sorted(candidates, key=lambda x: x[1])
+        return [x[2] for x in candidates]

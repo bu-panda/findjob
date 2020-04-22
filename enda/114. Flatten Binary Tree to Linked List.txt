@@ -1,0 +1,47 @@
+这个题就是对于每个节点，把左子树拉直，然后 node接左子树的头，左子树尾巴接右边头。注意要处理不存在的情况
+
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def flatten(self, root: TreeNode) -> None:
+        """
+        Do not return anything, modify root in-place instead.
+        """
+        self.flat_branch(root)
+        
+    
+    
+    
+    def flat_branch(self, node):
+        if node is None:
+            return None, None
+        
+        if node.left is None and node.right is None:
+            return node, node
+        
+        lbh, lbt = self.flat_branch(node.left)
+        rbh, rbt = self.flat_branch(node.right)
+        
+        
+        if lbh is not None and rbh is not None:
+            lbt.right = rbh
+            node.right = lbh
+            node.left = None
+            return node, rbt
+        elif lbh is not None and rbh is None:
+            node.right = lbh
+            node.left = None
+            return node, lbt
+        else:
+            return node, rbt
+            
+            
+        
+        
+    
+        

@@ -1,0 +1,21 @@
+由于限制于不同船之间一定有间隔，可以只考量那些扫描的时候，右边，下边没有东西的店
+
+class Solution:
+    def countBattleships(self, board: List[List[str]]) -> int:
+        ans = 0
+        
+        def in_bound(x, y, board):
+            row, col = len(board), len(board[0])
+            return 0 <= x < row and 0 <= y < col 
+        
+        for i, row in enumerate(board):
+            for j, e, in enumerate(row):
+                if e == "X":
+                    if in_bound(i, j + 1, board) and board[i][j + 1] == "X":
+                        continue
+                    if in_bound(i + 1, j, board) and board[i + 1][j] == "X":
+                        continue
+                    ans += 1
+        return ans
+                
+        

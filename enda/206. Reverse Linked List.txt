@@ -1,0 +1,42 @@
+很简单，注意recursive的写法
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def reverseList(self, head: ListNode) -> ListNode:
+        #self.new_head = None
+        #self.recursive_reverse(head)
+        return self.iterative_reverse(head)
+    
+    def iterative_reverse(self, node):
+        if node is None or node.next is None:
+            return node
+        
+        head, cur = node, node
+        while cur.next:
+            nxt = cur.next
+            cur.next = nxt.next
+            nxt.next = head
+            head = nxt
+        return head
+            
+        
+    
+    def recursive_reverse(self, node):
+        if node is None:
+            return None
+        
+        rest = self.recursive_reverse(node.next)
+        if rest is None:
+            self.new_head = node
+            return node
+        else:
+            rest.next = node
+            node.next = None
+            return node
+            
+        

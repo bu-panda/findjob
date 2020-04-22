@@ -1,0 +1,71 @@
+没什么意思。
+
+- 写一个函数，从当前的string分离出 前操作数， 操作符， 剩下的部分
+- 如果当前的为乘除等优先操作符，对剩下的string进行分离，然后计算 第一，第二操作数结果，更新操作符，直到不是乘除为止
+- 把事先存好的操作数，操作符，第二操作数拿出来，注意，第一次分离，ans是None，跳过就行了，以后它就是第一操作数
+- 循环，分离不出operator的时候退出
+
+class Solution:
+    def calculate(self, s: str) -> int:
+        self.ops = set(["+", "-", "*", "/"])
+        ans, op = None, None
+        rest = s
+        while True:
+            operand, operator, rest = self.split_expression(rest)
+            while operator == "*" or operator == "/":
+                nxt_operand, nxt_operator, rest = self.split_expression(rest)
+                operand = self.cal(operand, operator, nxt_operand)
+                operator = nxt_operator
+            
+            if ans is None:
+                ans = operand
+                op = operator
+            else:
+                ans = self.cal(ans, op, operand)
+                op = operator
+            if op is None:
+                break
+        return ans
+    
+    def split_expression(self, s):
+        if not s:
+            return None, None, None
+        
+        # Get operand
+        operand = ""
+        i = 0
+        while i < len(s):
+            if ord("0") <= ord(s[i]) <= ord("9"):
+                operand += s[i]
+            
+            if s[i] in self.ops:
+                break
+            i += 1
+        
+        operand = int(operand)
+        if i < len(s):
+            operator = s[i]
+            rest = s[i+1:]
+        else:
+            operator = None
+            rest = ""
+        return operand, operator, rest
+    
+    def cal(self, op1, op, op2):
+        if op == "+":
+            return op1 + op2
+        elif op == "-":
+            return op1 - op2
+        elif op == "*":
+            return op1 * op2
+        elif op == "/":
+            return op1 // op2
+        
+                
+                
+        
+        
+            
+        
+        
+        

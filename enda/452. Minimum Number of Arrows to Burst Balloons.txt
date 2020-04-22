@@ -1,0 +1,22 @@
+这个题用了greedy，但是不知道如何证明greedy是对的。
+
+按照结束位置排序，然后找到第一个end, 这个end会扎掉所有start在这之前的气球，
+
+如果s 已经大于了当前的end, 把这个s对应的end作第二个针
+
+class Solution:
+    def findMinArrowShots(self, points: List[List[int]]) -> int:
+        if not points:
+            return 0
+        
+        points.sort(key=lambda x: x[1])
+        
+        arrow = 1
+        first_end = points[0][1]
+        
+        for s, e in points:
+            if s > first_end:
+                arrow += 1
+                first_end = e
+        return arrow
+        

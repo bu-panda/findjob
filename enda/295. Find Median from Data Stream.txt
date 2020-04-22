@@ -1,0 +1,51 @@
+之前已经做过了，但是忘记了重要细节。 
+
+- 查空
+- 插入之后，如果，小的half已经平衡了，这时候，弹出最大的值，去下边的half竞争。重构下边的堆
+- 如果上边的堆比下边的小了， 从下边弹出最小的值，去上边的竞争，重构，这样就平衡了
+
+import heapq
+class MedianFinder:
+
+    def __init__(self):
+        """
+        initialize your data structure here.
+        """
+        self.top_heap = []
+        self.bot_heap = []
+
+    def addNum(self, num: int) -> None:
+        # Add to top heap, using min heap
+        heapq.heappush(self.top_heap, -num)
+        
+        largest = -heapq.heappop(self.top_heap)
+        heapq.heappush(self.bot_heap, largest)
+        
+        # If size diff larger then 1
+        if len(self.top_heap) < len(self.bot_heap):
+            e = heapq.heappop(self.bot_heap)
+            heapq.heappush(self.top_heap, -e)
+        
+        
+
+    def findMedian(self) -> float:
+        #print(self.top_heap)
+        #print(self.bot_heap)
+        if len(self.top_heap) == 0:
+            return 0
+        if len(self.top_heap) == len(self.bot_heap):
+            e1, e2 = -self.top_heap[0], self.bot_heap[0]
+            return (e1 + e2) / 2.0
+        else:
+            e1 = -self.top_heap[0]
+            if self.bot_heap:
+                return min(e1, self.bot_heap[0])
+            else:
+                return e1
+        
+
+
+# Your MedianFinder object will be instantiated and called as such:
+# obj = MedianFinder()
+# obj.addNum(num)
+# param_2 = obj.findMedian()
