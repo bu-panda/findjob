@@ -1,0 +1,40 @@
+这题用时 15 分钟， bug-free.
+
+后期优化到两个循环+ yield 
+
+提出了很好的问题，- 没有 reverse slash, all lower case characters.
+
+class Solution:
+    def simplifyPath(self, path: str) -> str:
+        stack = []
+        for path_name in self.extract(path):
+            if path_name == ".":
+                continue
+            elif path_name == "..":
+                if stack:
+                    stack.pop()
+            else:
+                stack.append(path_name)
+        
+        return "/"+ "/".join(stack)
+        
+    
+    def extract(self, path):
+        i = 0
+        while i < len(path):
+            while i < len(path) and path[i] == "/":
+                i += 1
+        
+            if i == len(path):
+                break
+            start = i
+            while i < len(path) and path[i] != "/":
+                i += 1
+            yield path[start:i]
+    
+
+            
+            
+        
+        
+        

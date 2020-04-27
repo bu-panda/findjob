@@ -1,0 +1,22 @@
+用时20 分钟
+
+左边数 kth, 右边数 tth, 计算方法是 k + t + 1 = length
+
+提出了问题什么是missing，以及超过部分如何计算
+
+class Solution:
+    def missingElement(self, nums: List[int], k: int) -> int:
+        if not nums:
+            return K
+        
+        offset = nums[0]
+        
+        offset_array = [(n - offset - i) for i, n in enumerate(nums)]
+        import bisect
+        missing_idx = bisect.bisect_left(offset_array, k)
+        if missing_idx == len(nums):
+            return nums[-1] + (k - offset_array[-1])
+        else:
+            return nums[missing_idx] - (offset_array[missing_idx] - k + 1)
+            
+        
